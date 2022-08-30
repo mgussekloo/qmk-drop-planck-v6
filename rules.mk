@@ -1,0 +1,5 @@
+SRC += muse.c
+
+MOUSEKEY_ENABLE = no
+COMBO_ENABLE = no
+KEY_OVERRIDE_ENABLE = yes
