@@ -17,33 +17,34 @@
 #include QMK_KEYBOARD_H
 #include "muse.h"
 
-enum planck_layers {
-  _QWERTY,
-  _LOWER,
-  _RAISE,
-  _OTHER
-};
-
-enum custom_keycodes {
-  CUSTOM_MO = SAFE_RANGE,
-};
-
+uint8_t mod_state;
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-    case CUSTOM_MO:
-        if (record->event.pressed) {
-          if (get_mods() && MOD_MASK_GUI) {
-            unregister_code(KC_LGUI);
-            layer_on((uint8_t)(uintptr_t)_RAISE);
-          } else {
-            layer_on((uint8_t)(uintptr_t)_LOWER);
-          }
-        } else {
-            layer_clear();
-        }
-        break;
-    }
-    return true;
+	mod_state = get_mods();
+
+	switch (keycode) {
+		case KC_BSPC:
+		{
+	        static bool delkey_registered;
+
+			if (record->event.pressed) {
+				if (mod_state && MOD_MASK_GUI) {
+					del_mods(MOD_MASK_GUI);
+					unregister_code(KC_BSPC);
+					register_code(KC_DEL);
+	                delkey_registered = true;
+	                set_mods(mod_state);
+	                return false;
+				}
+			} else {
+				if (delkey_registered) {
+					unregister_code(KC_DEL);
+					delkey_registered = false;
+					return false;
+				}
+			}
+		}
+	}
+	return true;
 };
 
 /* THIS FILE WAS GENERATED!
@@ -53,8 +54,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
  */
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  [_QWERTY] = LAYOUT_planck_grid(KC_ESC, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_BSPC, KC_TAB, KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_QUOT, KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, RSFT_T(KC_ENT), MO(3), KC_LCTL, KC_LALT, KC_LGUI, CUSTOM_MO, KC_SPC, KC_SPC, MO(2), KC_LEFT, KC_UP, KC_DOWN, KC_RGHT),
-  [_LOWER] = LAYOUT_planck_grid(KC_GRV, KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0, KC_DEL, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_MINS, KC_EQL, KC_NO, KC_NO, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_LBRC, KC_RBRC, KC_BSLS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO),
-  [_RAISE] = LAYOUT_planck_grid(KC_MUTE, KC_EXLM, KC_AT, KC_HASH, KC_DLR, KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, LSFT(KC_MINS), LSFT(KC_EQL), KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_LCBR, KC_RCBR, LSFT(KC_BSLS), KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO),
-  [_OTHER] = LAYOUT_planck_grid(KC_MUTE, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, BL_TOGG, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, RGB_TOG, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, BL_INC, BL_DEC, KC_NO, KC_NO, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, RGB_SPI, RGB_MOD, RGB_RMOD, RGB_SPD)
+	[0] = LAYOUT_ortho_4x12(KC_ESC, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_BSPC, KC_TAB, KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_QUOT, KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, RSFT_T(KC_ENT), MO(3), KC_LCTL, KC_LALT, KC_LGUI, TO(0), KC_SPC, KC_SPC, TT(1), KC_LEFT, KC_UP, KC_DOWN, KC_RGHT),
+	[1] = LAYOUT_ortho_4x12(TO(0), KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0, KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_MINS, KC_EQL, KC_NO, KC_GRV, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_LBRC, KC_RBRC, KC_BSLS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO),
+	[2] = LAYOUT_ortho_4x12(KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO),
+	[3] = LAYOUT_ortho_4x12(KC_MUTE, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, BL_ON, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, RGB_TOG, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, MU_TOG, BL_INC, BL_DEC, KC_NO, KC_NO, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, RGB_SPI, RGB_MOD, RGB_RMOD, RGB_SPD)
 };
+
+
+// --------------------------
