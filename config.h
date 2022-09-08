@@ -22,6 +22,8 @@
 // #define STARTUP_SONG SONG(NO_SOUND)
 #endif
 
+#define RGBLIGHT_ANIMATIONS
+
 #define COMBO_COUNT 0
 #define TAPPING_TERM 200
 #define TAPPING_TOGGLE 1

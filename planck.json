@@ -170,7 +170,7 @@
       "KC_NO",
       "KC_DEL",
       "BL_ON",
-      "KC_NO",
+      "BL_OFF",
       "KC_NO",
       "KC_NO",
       "KC_NO",
@@ -191,7 +191,7 @@
       "ANY(MU_TOG)",
       "BL_INC",
       "BL_DEC",
-      "KC_NO",
+      "RGB_MOD",
       "KC_NO",
       "KC_TRNS",
       "KC_NO",
@@ -201,8 +201,8 @@
       "KC_NO",
       "KC_NO",
       "KC_NO",
+      "KC_NO",
       "RGB_SPI",
-      "RGB_MOD",
       "RGB_RMOD",
       "RGB_SPD"
     ]
