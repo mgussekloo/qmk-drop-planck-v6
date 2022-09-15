@@ -15,7 +15,7 @@
  */
 
 #include QMK_KEYBOARD_H
-#include "muse.h"
+// #include "muse.h"
 
 uint8_t mod_state;
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {

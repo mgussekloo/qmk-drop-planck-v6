@@ -1,4 +1,4 @@
-SRC += muse.c
+# SRC += muse.c
 
 MOUSEKEY_ENABLE = no
 COMBO_ENABLE = no
