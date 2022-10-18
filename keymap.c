@@ -17,9 +17,10 @@
 #include QMK_KEYBOARD_H
 // #include "muse.h"
 
-uint8_t mod_state;
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-	mod_state = get_mods();
+	const uint8_t mods = get_mods();
+	const bool ctrl_held = (mods & MOD_MASK_CTRL) != 0;
 
 	switch (keycode) {
 		case KC_BSPC:
@@ -27,12 +28,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	        static bool delkey_registered;
 
 			if (record->event.pressed) {
-				if (mod_state && MOD_MASK_CTRL) {
+				if (ctrl_held) {
 					del_mods(MOD_MASK_CTRL);
 					unregister_code(KC_BSPC);
 					register_code(KC_DEL);
 	                delkey_registered = true;
-	                set_mods(mod_state);
+	                set_mods(mods);
 	                return false;
 				}
 			} else {
